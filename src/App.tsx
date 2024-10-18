@@ -13,9 +13,10 @@ import { Toaster } from "react-hot-toast";
 interface IPhotoData {
   id: string;
   slug: string;
-  alternative_slugs: Record<string, any>; 
+  alternative_slugs: Record<string, any>; // Adjust the type if you know the structure of `alternative_slugs`
   created_at: string;
   updated_at: string;
+  // Add other properties here as needed
 }
 
 interface IBigPicture {
