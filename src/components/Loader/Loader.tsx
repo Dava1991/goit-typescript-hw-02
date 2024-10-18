@@ -1,5 +1,4 @@
 import { ThreeDots } from "react-loader-spinner";
-import css from "./Loader.module.css";
 export default function Loader() {
   return (
     <div style={styles.loaderContainer}>
@@ -20,6 +19,6 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: "100vh", // This makes the container take up the full height of the viewport
+    height: "100vh", 
   },
 };
