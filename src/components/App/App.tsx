@@ -1,23 +1,24 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { fetchImages } from '../images-api';
+import { fetchImages } from '../images-api.tsx';
 import { Toaster, toast } from 'react-hot-toast';
 
-import SearchBar from '../SearchBar/SearchBar';
-import Loader from '../Loader/Loader';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
-import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
-import ImageGallery from '../ImageGallery/ImageGallery';
-import ImageModal from '../ImageModal/ImageModal';
-import ScrollToTopButton from '../ScrollToTopButton/ScrollToTopButton';
+import SearchBar from '../SearchBar/SearchBar.tsx';
+import Loader from '../Loader/Loader.tsx';
+import ErrorMessage from '../ErrorMessage/ErrorMessage.tsx';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn.tsx';
+import ImageGallery from '../ImageGallery/ImageGallery.tsx';
+import ImageModal from '../ImageModal/ImageModal.tsx';
+import ScrollToTopButton from '../ScrollToTopButton/ScrollToTopButton.tsx';
+import { Image, ModalParams, SearchResults } from "../types";
 
 export default function App() {
-  const [query, setQuery] = useState('');
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [images, setImages] = useState([]);
-  const [selectedImage, setSelectedImage] = useState(false);
-  const [hasMoreImages, setHasMoreImages] = useState(false);
+  const [query, setQuery] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+  const [images, setImages] = useState<Image[]>([]);
+  const [selectedImage, setSelectedImage] = useState<boolean>(false);
+  const [hasMoreImages, setHasMoreImages] = useState<boolean>(false);
 
   const galleryRef = useRef(null);
   const lastElementRef = useRef(null);
