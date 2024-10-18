@@ -1,35 +1,136 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState, useCallback, useRef } from 'react';
+import { fetchImages } from './components/images-api';
+import { Toaster, toast } from 'react-hot-toast';
 
-function App() {
-  const [count, setCount] = useState(0)
+import SearchBar from './components/SearchBar/SearchBar';
+import Loader from './components/Loader/Loader';
+import ErrorMessage from './components/ErrorMessage/ErrorMessage';
+import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
+import ImageGallery from './components/ImageGallery/ImageGallery';
+import ImageModal from './components/ImageModal/ImageModal';
+import ScrollToTopButton from './components/ScrollToTopButton/ScrollToTopButton';
+
+export default function App() {
+  const [query, setQuery] = useState('');
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setPage] = useState(1);
+  const [images, setImages] = useState([]);
+  const [selectedImage, setSelectedImage] = useState(false);
+  const [hasMoreImages, setHasMoreImages] = useState(false);
+
+  const galleryRef = useRef(null);
+  const lastElementRef = useRef(null);
+
+  const handleSearchSubmit = useCallback((newQuery) => {
+    setQuery(newQuery);
+    setPage(1);
+    setImages([]);
+    setError(null);
+  }, []);
+
+  const handleLoadMore = useCallback(() => {
+    setPage((prevPage) => prevPage + 1);
+  }, []);
+
+  useEffect(() => {
+    if (!query.trim()) return;
+
+    const getImages = async () => {
+      setIsLoading(true);
+      setError(null);
+      try {
+        const { results, totalPages } = await fetchImages(query, page);
+
+        if (results.length === 0) {
+          toast.error(
+            'Sorry, we couldn’t find anything for your query. Please try different keywords.🧐',
+          );
+          setHasMoreImages(false);
+        } else {
+          setImages((prevImages) => (page === 1 ? results : [...prevImages, ...results]));
+          const isLastPage = page >= totalPages;
+          setHasMoreImages(!isLastPage);
+          if (isLastPage) {
+            toast.error(
+              'There are no more images available. Try searching with different keywords or check back later.🔍',
+            );
+          }
+        }
+      } catch (error) {
+        toast.error(error.message || 'Something went wrong');
+        setHasMoreImages(false);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    getImages();
+  }, [query, page]);
+
+  const openModal = useCallback((image) => {
+    setSelectedImage(image);
+  }, []);
+
+  const closeModal = useCallback(() => {
+    setSelectedImage(false);
+  }, []);
+
+  useEffect(() => {
+    if (selectedImage) {
+      document.body.classList.add('modal-open');
+    } else {
+      document.body.classList.remove('modal-open');
+    }
+  }, [selectedImage]);
+
+  // autoscrolling after loading images
+  useEffect(() => {
+    if (page > 1 && lastElementRef.current) {
+      const updateScroll = () => {
+        const { height } = lastElementRef.current.getBoundingClientRect();
+        window.scrollBy({
+          top: height * 1.9,
+          behavior: 'smooth',
+        });
+      };
+
+      const img = lastElementRef.current.querySelector('img');
+      if (img.complete) {
+        updateScroll();
+      } else {
+        img.addEventListener('load', updateScroll);
+        return () => img.removeEventListener('load', updateScroll);
+      }
+    }
+  }, [images, page]);
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <SearchBar onSearch={handleSearchSubmit} />
+      <Toaster
+        position="top-center"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#363636',
+            color: '#fff',
+          },
+        }}
+      />
+      {images.length > 0 && (
+        <ImageGallery
+          images={images}
+          openModal={openModal}
+          ref={galleryRef}
+          lastElementRef={lastElementRef}
+        />
+      )}
+      {isLoading && <Loader />}
+      {error && <ErrorMessage message={error} />}
+      {hasMoreImages && !isLoading && <LoadMoreBtn onClick={handleLoadMore} />}
+      {selectedImage && <ImageModal isOpen={true} onClose={closeModal} image={selectedImage} />}
+      {!selectedImage && <ScrollToTopButton />}
+    </div>
+  );
 }
-
-export default App
