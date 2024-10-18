@@ -20,10 +20,10 @@ export default function App() {
   const [selectedImage, setSelectedImage] = useState<boolean>(false);
   const [hasMoreImages, setHasMoreImages] = useState<boolean>(false);
 
-  const galleryRef = useRef(null);
-  const lastElementRef = useRef(null);
+  const galleryRef = useRef<number>(null);
+  const lastElementRef = useRef<number>(null);
 
-  const handleSearchSubmit = useCallback((newQuery) => {
+  const handleSearchSubmit = useCallback((newQuery) => <handleSearchSubmit>{
     setQuery(newQuery);
     setPage(1);
     setImages([]);
