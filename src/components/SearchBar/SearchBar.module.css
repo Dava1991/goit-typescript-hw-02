@@ -1,40 +1,42 @@
 .header {
-    display: flex;
-    justify-content: center;
-    padding: 8px 16px;
-    background-color: rgb(89, 89, 236);
-  }
-  .form {
-    position: relative;
-    max-width: 300px;
-  }
-  
-  .input {
-    border-radius: 25px;
-    border: transparent;
-    width: 100%;
-    height: 35px;
-    padding: 0 19px 0 38px;
-    font-size: 16px;
-    @media (min-width: 300px) {
-      font-size: 20px;
-    }
-    transition: all 250ms ease-in-out;
-  }
-  
-  .btn {
-    position: absolute;
-    left: 8px;
-    top: 50%;
-    border: none;
-    background: transparent;
-    padding: 0;
-    transform: translate(0, -50%) scale(1);
-  }
-  
-  .btn:hover,
-  .btn:focus {
-    transform: translate(0, -50%) scale(1.1);
-    background: transparent;
-    outline: none;
-  }
+  background-color: rgba(69, 69, 240, 0.795);
+}
+.input {
+  box-sizing: border-box;
+  border: none;
+  border-radius: 4px;
+  width: 300px;
+  height: 30px;
+  padding-left: 30px;
+}
+.input:hover,
+.input:focus {
+  outline: none;
+  border-color: transparent;
+}
+.form {
+  /* border: 1px solid black; */
+  width: fit-content;
+  margin: 0 auto;
+  /* display: flex;
+  justify-content: center; */
+  padding: 4px;
+  position: relative;
+}
+.button {
+  /* border: 1px solid black; */
+  position: absolute;
+  left: 4px;
+  top: 10%;
+  background-color: transparent;
+  width: fit-content;
+  padding: 4px;
+}
+.button:hover,
+.button:focus {
+  border: none;
+}
+.iconbtn {
+  font-size: 18px; /* Adjust the icon size */
+  color: #888; /* Adjust color */
+}

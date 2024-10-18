@@ -1,8 +1,19 @@
-.container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 16px;
-    margin: 8px auto;
-    padding: 0 16px;
-  }
+.list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 20px;
+  /* display: grid;
+  grid-template-columns: repeat(3, 1fr); 
+  grid-template-rows: repeat(4, auto); 
+  gap: 10px;  */
+}
+.item {
+  /* width: calc(33.33% - 10px);
+  margin-bottom: 10px; */
+  width: calc((100% - 30px) / 4); /* Take full width of grid column */
+  height: 300px; /* Adjust to image's aspect ratio */
+  overflow: hidden;
+  position: relative;
+}

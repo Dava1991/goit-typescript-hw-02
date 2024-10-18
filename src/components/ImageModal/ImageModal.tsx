@@ -1,73 +1,62 @@
-import { useEffect, useState } from 'react';
-import Modal from 'react-modal';
-import { IoCloseOutline } from 'react-icons/io5';
-import css from './ImageModal.module.css';
-
-Modal.setAppElement('#root');
-
-export default function ImageModal({ isOpen, onClose, image }) {
-  const [scrollbarWidth, setScrollbarWidth] = useState(0);
-
+import { useEffect } from "react";
+import ReactModal from "react-modal";
+import Loader from "../Loader/Loader";
+import css from "./ImageModal.module.css";
+// import "./ImageModal.css";
+export default function ImageModal({ isOpen, onClose, modalData }) {
   useEffect(() => {
-    const calculateScrollbarWidth = () => {
-      const scrollWidth = window.innerWidth - document.documentElement.clientWidth;
-      setScrollbarWidth(scrollWidth);
-      document.documentElement.style.setProperty('--scrollbar-width', `${scrollWidth}px`);
+    const handleEsc = (event) => {
+      if (event.code === "Escape" && isOpen) {
+        onClose();
+      }
     };
-
-    calculateScrollbarWidth();
-    window.addEventListener('resize', calculateScrollbarWidth);
-
+    document.addEventListener("keydown", handleEsc);
     return () => {
-      window.removeEventListener('resize', calculateScrollbarWidth);
+      document.removeEventListener("keydown", handleEsc);
     };
-  }, []);
-
-  useEffect(() => {
-    const originalOverflow = document.body.style.overflow;
-    const originalPaddingRight = window.getComputedStyle(document.body).paddingRight;
-
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.paddingRight = `${scrollbarWidth}px`;
-    } else {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.paddingRight = originalPaddingRight;
-    }
-
-    return () => {
-      document.body.style.overflow = originalOverflow;
-      document.body.style.paddingRight = originalPaddingRight;
-    };
-  }, [isOpen, scrollbarWidth]);
-
-  if (!image) return null;
-
+  }, [isOpen, onClose]);
   return (
-    <Modal
+    <ReactModal
       isOpen={isOpen}
       onRequestClose={onClose}
-      className={css.modalContent}
-      overlayClassName={css.modalOverlay}
-      contentLabel="Image Modal"
+      ariaHideApp={true}
+      shouldCloseOnEsc={true}
       shouldCloseOnOverlayClick={true}
+      overlayClassName={css.overlay}
+      className={css.modal}
+      style={{
+        overlay: {
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: "rgba(0, 0, 0, 0.712)",
+        },
+        content: {
+          position: "absolute",
+          top: "40px",
+          left: "40px",
+          right: "40px",
+          bottom: "40px",
+          // overflow: "auto",
+          WebkitOverflowScrolling: "touch",
+          borderRadius: "4px",
+          outline: "none",
+        },
+      }}
     >
-      <div className={css.wrapper}>
-        <img src={image.urls.regular} alt={image.tags} className={css.img} />
-        <button onClick={onClose} className={css.btn}>
-          <IoCloseOutline size="30px" />
-        </button>
-        <div className={css.thumb}>
-          <div className={css.meta}>
-            <p className={css.info}>
-              <span className={css.title}>Description:</span> {image.alt_description}
-            </p>
-            <p className={css.info}>
-              <span className={css.title}>Location:</span> {image.user.location}
-            </p>
-          </div>
-        </div>
+      <div>
+        {modalData ? (
+          <img
+            className={css.image}
+            src={modalData && modalData.urls.regular}
+            alt={modalData && modalData.urls.alt_description}
+          />
+        ) : (
+          <Loader />
+        )}
       </div>
-    </Modal>
+    </ReactModal>
   );
 }

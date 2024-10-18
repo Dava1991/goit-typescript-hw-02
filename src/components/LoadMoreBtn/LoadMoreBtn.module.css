@@ -1,9 +1,8 @@
-.container {
-    margin: 16px 0;
-    display: flex;
-    justify-content: center;
+.button {
+    background-color: rgba(69, 69, 240, 0.795);
   }
-  .btn {
-    border-radius: 8px;
-    font-size: 20px;
+  .button:hover,
+  .button:focus {
+    border: none;
+    outline: none;
   }

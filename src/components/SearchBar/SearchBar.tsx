@@ -1,32 +1,35 @@
-import toast from 'react-hot-toast';
-import { TbPhotoSearch } from 'react-icons/tb';
-import css from './SearchBar.module.css';
+import { BsSearch } from "react-icons/bs";
+import css from "./SearchBar.module.css";
+import toast from "react-hot-toast";
+import { FormEvent } from "react";
 
-export default function SearchBar({ onSearch }) {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const query = form.elements.query.value.trim();
-    if (query === '') {
-      toast.error('This field cannot be empty! Please write something.🖊️');
+export default function SearchBar({ onSubmit }) {
+  const handleInputSubmit = (event: FormEvent) => {
+    event.preventDefault();
+
+    const query: string = event.target.elements.searchword.value.trim();
+
+    if (!query) {
+      toast.error("Write your query, please!", {
+        duration: 4000,
+        position: "top-left",
+        style: { color: "red" },
+      });
       return;
     }
-    onSearch(query);
-    form.reset();
+    onSubmit(query);
   };
   return (
     <header className={css.header}>
-      <form className={css.form} onSubmit={handleSubmit}>
+      <form className={css.form} onSubmit={handleInputSubmit}>
         <input
-          className={css.input}
           type="text"
-          name="query"
-          autoComplete="off"
-          autoFocus
-          placeholder="Search images..."
+          className={css.input}
+          name="searchword"
+          placeholder="Search images and photos"
         />
-        <button className={css.btn} type="submit">
-          <TbPhotoSearch size="22" />
+        <button className={css.button} type="submit">
+          <BsSearch className={css.iconbtn} />
         </button>
       </form>
     </header>
