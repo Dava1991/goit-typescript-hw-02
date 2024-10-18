@@ -1,14 +1,14 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { fetchImages } from './components/images-api';
+import { fetchImages } from '../images-api';
 import { Toaster, toast } from 'react-hot-toast';
 
-import SearchBar from './components/SearchBar/SearchBar';
-import Loader from './components/Loader/Loader';
-import ErrorMessage from './components/ErrorMessage/ErrorMessage';
-import LoadMoreBtn from './components/LoadMoreBtn/LoadMoreBtn';
-import ImageGallery from './components/ImageGallery/ImageGallery';
-import ImageModal from './components/ImageModal/ImageModal';
-import ScrollToTopButton from './components/ScrollToTopButton/ScrollToTopButton';
+import SearchBar from '../SearchBar/SearchBar';
+import Loader from '../Loader/Loader';
+import ErrorMessage from './ErrorMessage';
+import LoadMoreBtn from '../LoadMoreBtn/LoadMoreBtn';
+import ImageGallery from '../ImageGallery/ImageGallery';
+import ImageModal from '../ImageModal/ImageModal';
+import ScrollToTopButton from '../ScrollToTopButton/ScrollToTopButton';
 
 export default function App() {
   const [query, setQuery] = useState('');
